@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import os
 import pandas as pd
 import pylab as plt
 import numpy as np
@@ -10,7 +11,6 @@ sns.set_context("paper", font_scale=3)
 
 __package__ = "2D Dynamic Viewer"
 __author__  = "Nico Curti (nico.curit2@unibo.it)"
-
 
 def dynplot(data, buff_size = 10, npt_stat = 5, color='k'):
   """
@@ -127,15 +127,23 @@ def dynplot(data, buff_size = 10, npt_stat = 5, color='k'):
   movie = animation.ArtistAnimation(fig, ims, interval=150, blit=True, repeat_delay=100)
   return movie
 
+#%%
+#This is a horrible way to make it work:
+#It crashed if the Index of the DataFrame (which I get from the column
+#frame) is the Nth number for the Nth line because it wants it to be
+#N-1. So I subtracted 1 from the 3 columns and then added 1 to the 
+#2 columns left in the DataFrame, succesfully subtracting 1 to the index.
 
 if __name__ == '__main__':
 
-  np.random.seed(123)
-  data = pd.DataFrame(np.random.uniform(low=0.,
-                                        high=100.,
-                                        size=(100, 2)),
-                      columns=['x', 'y'])
+  data_sample = pd.read_csv('data_original.csv', sep=',', header=0, usecols=['x_mm', 'y_mm'], nrows=100)
+  
+  data_sample = data_sample.rename(columns={'x_mm': 'x'})
+  data_sample = data_sample.rename(columns={'y_mm': 'y'})
 
-  movie = dynplot(data, buff_size=10, npt_stat=5, color='k')
+  movie = dynplot(data_sample, buff_size=10, npt_stat=5, color='k')
 
-#  movie.save('./animation.gif', writer='imagemagick', fps=60)
+  movie.save('./animation.gif', writer='imagemagick', fps=60)
+  
+  os.remove('exp_0_sample.csv')  
+  os.remove('exp_0_sample_xy.csv')
