@@ -3,7 +3,7 @@ project (Drosophila LANGUAGES CXX VERSION 1.0.0 DESCRIPTION "Drosophila Viewer D
 set (CMAKE_CXX_STANDARD 14)
 set (CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Walkers Version
+# Drosophila Version
 set (MAJOR    1)
 set (MINOR    0)
 set (REVISION 0)
